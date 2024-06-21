@@ -5,7 +5,7 @@
 </head>
 <body>
     <h2>Previous experiences relevant for the post (1 step for each 3 years)</h2>
-    <form id="experienceForm">
+    <form id="experienceForm" enctype="multipart/form-data">
         <div id="experienceInputs">
             <div class="experienceEntry">
                 <label for="startDate1">Start date:</label>
@@ -20,8 +20,21 @@
                 <label for="relevancy1">Relevancy of experience (%):</label>
                 <input type="number" id="relevancy1" name="relevancy1" min="0" max="100" value="100">
                 
+                <label for="employmentType1">Employment Type:</label>
+                <select id="employmentType1" name="employmentType1">
+                    <option value="fulltime">Full-time</option>
+                    <option value="parttime">Part-time</option>
+                    <option value="internship">Internship</option>
+                    <option value="volunteer">Volunteer Work</option>
+                    <option value="traineeship">Traineeship</option>
+                    <option value="contract">Fixed Term/Contract</option>
+                </select>
+                
                 <label for="title1">Post (Title, Employer):</label>
                 <input type="text" id="title1" name="title1">
+                
+                <label for="upload1">Upload Certificate/Pay Slip:</label>
+                <input type="file" id="upload1" name="upload1">
             </div>
         </div>
         <button type="button" onclick="addExperienceEntry()">Add another experience</button>
@@ -51,8 +64,21 @@
                 <label for="relevancy${experienceCount}">Relevancy of experience (%):</label>
                 <input type="number" id="relevancy${experienceCount}" name="relevancy${experienceCount}" min="0" max="100" value="100">
                 
+                <label for="employmentType${experienceCount}">Employment Type:</label>
+                <select id="employmentType${experienceCount}" name="employmentType${experienceCount}">
+                    <option value="fulltime">Full-time</option>
+                    <option value="parttime">Part-time</option>
+                    <option value="internship">Internship</option>
+                    <option value="volunteer">Volunteer Work</option>
+                    <option value="traineeship">Traineeship</option>
+                    <option value="contract">Fixed Term/Contract</option>
+                </select>
+                
                 <label for="title${experienceCount}">Post (Title, Employer):</label>
                 <input type="text" id="title${experienceCount}" name="title${experienceCount}">
+                
+                <label for="upload${experienceCount}">Upload Certificate/Pay Slip:</label>
+                <input type="file" id="upload${experienceCount}" name="upload${experienceCount}">
             `;
             document.getElementById('experienceInputs').appendChild(experienceDiv);
         }
@@ -65,20 +91,22 @@
                 const endDate = new Date(document.getElementById(`endDate${i}`).value);
                 const fte = parseFloat(document.getElementById(`fte${i}`).value) / 100;
                 const relevancy = parseFloat(document.getElementById(`relevancy${i}`).value) / 100;
+                const employmentType = document.getElementById(`employmentType${i}`).value;
 
                 if (startDate && endDate && endDate > startDate) {
                     const diffTime = Math.abs(endDate - startDate);
                     let diffMonths = diffTime / (1000 * 60 * 60 * 24 * 30.44); // Approximate average days per month
                     
-                    // Handling internships
-                    if (diffMonths < 6) {
+                    // Handling internships and relevancy
+                    if (employmentType === 'internship' && diffMonths < 6) {
                         if (relevancy === 1) {
                             diffMonths *= 0.5;
                         } else {
                             diffMonths = 0;
                         }
                     }
-                    
+
+                    // Apply full-time equivalence and relevancy
                     totalMonths += diffMonths * fte * relevancy;
                 }
             }
@@ -92,3 +120,4 @@
     </script>
 </body>
 </html>
+
